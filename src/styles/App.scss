@@ -21,7 +21,7 @@ html {
 }
 
 body {
-  background: whitesmoke;
+  background: linear-gradient(#141e30, #243b55);
   font-size: 16px;
   font-size: 1.6rem;
   letter-spacing: 0.3px;
@@ -29,6 +29,7 @@ body {
 }
 p,h1,h2,h3,h4,h5,h6 {
   margin: 0;
+  color: rgb(192, 192, 192);
 }
 button{
   background: none;
@@ -50,7 +51,7 @@ button{
     grid-auto-flow: column;
     grid-gap: 20px;
     &-item{
-      color: black;
+      color: whitesmoke;
       font-weight: 800;
       font-size: 16px;
     }
@@ -63,6 +64,7 @@ button{
     &__icon{
       font-size: 20px;
       text-decoration: none;
+      color: #fff;
     }
   }
 }
@@ -105,10 +107,12 @@ button{
   width: 100%;
   justify-content: space-around;
   border: 1px solid transparent;
+  background: rgba(0,0,0,.5);
+  box-sizing: border-box;
+  box-shadow: 0 15px 25px rgba(0,0,0,.6);
+  border-radius: 10px;
+  transition: transform 0.3s, box-shadow 0.3s;
   cursor: pointer;
-  * {
-    cursor: pointer;
-  }
   &__content {
     padding: 5px;
     display: grid;
@@ -126,15 +130,15 @@ button{
   &__price {
     font-size: 14px;
     font-weight: 500;
+    color: aliceblue;
   }
   &__name {
     font-size: 14px;
-    background: #fff;
+    background:rgb(207, 207, 207);
     position: absolute;
     padding: 2px 5px;
     bottom: 0;
     left: 10px;
-    transition: .3s;
   }
   &__description {
     font-size: 14px;
@@ -144,12 +148,16 @@ button{
     background: #433d8b;
     color: rgb(192, 192, 192);
     font-weight: 500;
-    border-radius: 2px;
+    border-radius: 10px;
     max-width: max-content;
     padding: 0 10px;
   }
   &:hover {
     border-color: black;
+    transform: scale(1.03, 1.03);
+    box-shadow: 0 70px 63px -60px #000000;
+    z-index: 100;
+    
     .card {
       &__price {
         bottom: 10px;
