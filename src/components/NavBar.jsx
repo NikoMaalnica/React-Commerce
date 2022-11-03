@@ -1,10 +1,23 @@
 import CartWidget from "./CartWidget"
+import { Link } from "react-router-dom"
+
+const links = ["PC", "COMPONENTES", "PERIFERICOS"]
 
 const NavBar = () => {
 
     return <header className="header">
-    <img src={"https://toppng.com/uploads/preview/dragon-heart-tribal-v3-red-by-kuroakai-icon-cool-guild-emblems-with-transparent-background-11562905775b9ugkvtndc.png"} className="header__logo" alt="logo"/>
-    <div className='header__nav'><h3>PC'S</h3><h3>KEYBOARD/MOUSE</h3><h3>OTROS</h3></div>
+    <Link to={`/`}>
+        <img src={"https://www.imagensempng.com.br/wp-content/uploads/2021/08/05-8.png"} className="header__logo" alt="logo"/>
+    </Link>
+    <div className='header__nav'>
+        {links.map((section) => {
+            return (
+                <Link style={{textDecoration: "none", color: "whitesmoke"}} to={`/category/${section.toLowerCase()}`} key={section}>
+                    {section}
+                </Link>
+            )
+        })}
+    </div>
     <CartWidget />
     </header>
 }

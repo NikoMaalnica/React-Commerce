@@ -1,9 +1,11 @@
-const Item = ({nombre, precio, imagen, descripcion, tag}) => {
+import { useNavigate } from "react-router-dom"
 
+const Item = ({id, nombre, precio, imagen, descripcion, tag}) => {
+    const navigate = useNavigate();
     return (
-        <div className="card">
+        <div className="card" onClick={() => navigate(`/item/${id}`)}>
             <div className="card__top">
-                <img src={imagen} alt="pc case"/>
+                <img src={imagen} alt="imagen item"/>
                 <span className="card__name">{nombre}</span>
             </div>
             <div className="card__content">

@@ -1,18 +1,21 @@
 import './styles/App.scss';
-import AppContainer from './components/AppContainer';
-import NavBar from './components/NavBar';
-import Footer from './components/Footer';
-import ItemListContainer from './components/ItemListContainer';
+import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Home } from './pages/Home';
+import { Category } from './pages/Category';
+import { Detail } from './pages/Detail';
 
 function App() {
+
   return (
     <div className="App">
-      <NavBar />
-      <main className='content'>
-        <ItemListContainer greeting="BIENVENIDO A PC-SHOP"/>
-        <AppContainer />
-      </main>
-      <Footer />
+      <BrowserRouter>
+        <Routes>
+          <Route path={"/"} element={<Home />}/>
+          <Route path={"/category/:categoryId"} element={<Category />}/>
+          <Route path={"/item/:itemId"} element={<Detail />}/>
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }
