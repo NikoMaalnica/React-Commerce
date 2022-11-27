@@ -4,7 +4,6 @@ import { Link } from "react-router-dom"
 const links = ["PC", "COMPONENTES", "PERIFERICOS"]
 
 const NavBar = () => {
-
     return <header className="header">
     <Link to={`/`}>
         <img src={"https://www.imagensempng.com.br/wp-content/uploads/2021/08/05-8.png"} className="header__logo" alt="logo"/>
@@ -18,7 +17,9 @@ const NavBar = () => {
             )
         })}
     </div>
-    <CartWidget />
+    <Link to={`/cart`} className="navbar__cart">
+        <CartWidget />
+    </Link>
     </header>
 }
 

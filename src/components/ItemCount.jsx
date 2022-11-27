@@ -14,12 +14,12 @@ const ItemCount = ({stock, onAdd}) => {
 
     return (
         <div className='grid'>
-            <Button onClick={() => handleSubstract()} leftIcon={<TbMinus />}></Button>
+            <Button onClick={handleSubstract} leftIcon={<TbMinus />}></Button>
             <span>{contador}</span>
-            <Button onClick={() => handleAdd()} rightIcon={<TbPlus />}></Button>
+            <Button onClick={handleAdd} rightIcon={<TbPlus />}></Button>
             <Button onClick={() => {
-                if (contador) onAdd()
-                }}> Agregar al carrito </Button>
+                if (contador) onAdd(contador)
+                }} disabled={!contador}> Agregar al carrito </Button>
         </div>
     )
 }

@@ -1,90 +1,61 @@
-const products = [
-    {
-        nombre: "PC GAMER N|1",
-        precio: 90000,
-        descripcion: "Amd Ryzen 5 4600g 16gb Nvme 240 Radeon Vega",
-        tag: "MAS POPULAR",
-        imagen: "https://www.imagensempng.com.br/wp-content/uploads/2021/10/78-2.png",
-        id:0,
-        categoria: "pc",
-    },
-    {
-        nombre: "PC GAMER N|2",
-        precio: 180000,
-        descripcion: "Amd Ryzen 7 5700g Ram 32gb 960g Ssd Wifi",
-        tag: "ENVIO GRATIS",
-        imagen: "https://www.imagensempng.com.br/wp-content/uploads/2021/10/978.png",
-        id:1,
-        categoria: "pc",
-    },
-    {
-        nombre: "PC GAMER N|3",
-        precio: 340000,
-        descripcion: "Ryzen 9 5900x A520 16gb Ssd 240 Rtx 3060 12gb",
-        tag: "ENVIO GRATIS",
-        imagen: "https://www.imagensempng.com.br/wp-content/uploads/2021/10/910.png",
-        id:2,
-        categoria: "pc",
-    },
-    {
-        nombre: "PC GAMER N|4",
-        precio: 500000,
-        descripcion: "Ryzen 9 5900x A520 64gb Ssd 240 Rtx 3090 12gb",
-        tag: "ENVIO GRATIS",
-        imagen: "https://www.imagensempng.com.br/wp-content/uploads/2021/10/640.png",
-        id:3,
-        categoria: "pc",
-    },
-    {
-        nombre: "PROCESADROR AMD RYZEN 7",
-        precio: 68000,
-        descripcion: "Procesador Amd Ryzen 7 5700g Am4",
-        tag: "ENVIO GRATIS",
-        imagen: "https://app.contabilium.com/files/explorer/7026/Productos-Servicios/concepto-6117831.jpg",
-        id:4,
-        categoria: "componentes",
-    },
-    {
-        nombre: "PROCESADROR AMD RYZEN 9",
-        precio: 200000,
-        descripcion: "Procesador Amd Ryzen 9 7950x Am5",
-        tag: "ENVIO GRATIS",
-        imagen: "https://app.contabilium.com/files/explorer/7026/Productos-Servicios/concepto-9361221.jpg",
-        id:5,
-        categoria: "componentes",
-    },
-    {
-        nombre: "TECLADO HYPERX ALLOY ORIGINS",
-        precio: 200000,
-        descripcion: "Teclado HyperX Alloy Origins RGB Mecanico switch Hyperx HX-K",
-        tag: "ENVIO GRATIS",
-        imagen: "https://katech.com.ar/wp-content/uploads/TGA178.jpg",
-        id:6,
-        categoria: "perifericos",
-    },
-    {
-        nombre: "MOUSE RAZER DEATHADDER",
-        precio: 6000,
-        descripcion: "Mouse Razer Deathadder V2 Lite",
-        tag: "ENVIO GRATIS",
-        imagen: "https://www.qloud.ar/SITES/IMG/gaming-point-06-2021/221_13-10-2022-12-10-52-concepto-7414849_ccexpress.png",
-        id:7,
-        categoria: "perifericos",
-    },
-];
+import { collection, getDocs, getDoc, doc, query, where, writeBatch, increment, updateDoc } from "firebase/firestore";
+import { db } from "../services/firebase";
 
-export const getProducts = (categoria) =>
-    new Promise((res, rej) => {
-        const response = categoria ? products.filter((filtro) => filtro.categoria === categoria) : products;
-        setTimeout(() => {
-            res(response);
-        }, 3000);
+const productsRef = collection(db, "items");
+
+
+export const getProducts = async (categoria) => {
+    const products = [];
+
+    const q = categoria ? query(productsRef, where("categoria", "==", categoria)) : productsRef;
+
+    const querySnapshot = await getDocs(q);
+
+    querySnapshot.forEach((doc) => {
+        products.push({...doc.data(), id: doc.id });
     });
 
-export const getProduct = (itemId) => 
-    new Promise((res, rej) => {
-        const response = products.find((item) => item.id === +itemId);
-        setTimeout(() => {
-        res(response);
-        }, 3000);
-    });
+    return products
+};
+
+
+export const getProduct = async (itemId) => {
+
+    const document = doc(db, "items", itemId)
+
+    const docSnap = await getDoc(document);
+
+    if(docSnap.exists()){
+        return {id : docSnap.id, ...docSnap.data()};
+    }
+    return null;
+};
+
+export const updateProduct = async (id, item) => {
+    const productDoc = await updateDoc(doc(db, "items", id), item)
+    return;
+}
+
+export const updateManyProducts = async (items) => {
+    const batch = writeBatch(db);
+
+    items.forEach(({id, qty})=>{
+        const docRef = doc(db, "items", id);
+        batch.update(docRef, {stock: increment(-qty)})
+    })
+    /* const items = {
+        "6XaZgcARV9yqBwV0NEVD" : 10,
+        "RIAFWFG3hpJTipvbXOmF" : 20,
+        "RVHHlp5E96I2LLbp4vri" : 50,
+        "ZV7NWVBz11mFV9tw0D2U" : 30,
+        "bs2WQHARfupJEGuy0oxN" : 15,
+        "dfVC0VhomZN77u222lG0" : 25,
+        "vPjHVgXXOC06v3KVfp2k" : 80,
+        "yTGOq5m3Kw3jzKSY1eKD" : 10
+    };
+    for (let id in items){
+        const docRef = doc(dv, "items", id);
+        batch.update(docRef, {stock: increment(-items[id])})
+    } */
+    batch.commit()
+}
