@@ -1,4 +1,4 @@
-import { collection, getDocs, getDoc, doc, query, where, writeBatch, increment, updateDoc } from "firebase/firestore";
+import { collection, getDocs, getDoc, doc, query, where, writeBatch, increment} from "firebase/firestore";
 import { db } from "../services/firebase";
 
 const productsRef = collection(db, "items");
@@ -31,11 +31,6 @@ export const getProduct = async (itemId) => {
     return null;
 };
 
-export const updateProduct = async (id, item) => {
-    const productDoc = await updateDoc(doc(db, "items", id), item)
-    return;
-}
-
 export const updateManyProducts = async (items) => {
     const batch = writeBatch(db);
 
@@ -43,19 +38,5 @@ export const updateManyProducts = async (items) => {
         const docRef = doc(db, "items", id);
         batch.update(docRef, {stock: increment(-qty)})
     })
-    /* const items = {
-        "6XaZgcARV9yqBwV0NEVD" : 10,
-        "RIAFWFG3hpJTipvbXOmF" : 20,
-        "RVHHlp5E96I2LLbp4vri" : 50,
-        "ZV7NWVBz11mFV9tw0D2U" : 30,
-        "bs2WQHARfupJEGuy0oxN" : 15,
-        "dfVC0VhomZN77u222lG0" : 25,
-        "vPjHVgXXOC06v3KVfp2k" : 80,
-        "yTGOq5m3Kw3jzKSY1eKD" : 10
-    };
-    for (let id in items){
-        const docRef = doc(dv, "items", id);
-        batch.update(docRef, {stock: increment(-items[id])})
-    } */
     batch.commit()
 }

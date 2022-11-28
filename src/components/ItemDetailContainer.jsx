@@ -8,7 +8,7 @@ import SpinnerLoading from "./Spinner";
 
 export const ItemDetailContainer = () => {
     const {itemId} = useParams();
-    const {addProduct, removeProduct} = useCartContext();
+    const {addProduct} = useCartContext();
     const [item, setItem] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -20,7 +20,6 @@ export const ItemDetailContainer = () => {
     },[itemId]);
 
     const handleAdd = (qty) => {
-        console.log("producto agregado", {...item, qty});
         addProduct(item, qty)
     };
 
@@ -34,7 +33,6 @@ export const ItemDetailContainer = () => {
                     <span className="card__detail__description">{item.descripcion}</span>
                     <span className="card__detail__tag">{item.tag}</span>
                     <ItemCount stock={item.stock} onAdd={handleAdd} />
-                    <button onClick={() => removeProduct(item.id)}>Eliminar</button>
                 </div>
             </div>
         </>

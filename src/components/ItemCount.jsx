@@ -1,5 +1,5 @@
 import { useState } from "react"
-import Button from "./Button"
+import ButtonCounter from "./Button"
 import { TbPlus, TbMinus } from "react-icons/tb"
 
 const ItemCount = ({stock, onAdd}) => {
@@ -14,12 +14,12 @@ const ItemCount = ({stock, onAdd}) => {
 
     return (
         <div className='grid'>
-            <Button onClick={handleSubstract} leftIcon={<TbMinus />}></Button>
+            <ButtonCounter onClick={handleSubstract} leftIcon={<TbMinus />}></ButtonCounter>
             <span>{contador}</span>
-            <Button onClick={handleAdd} rightIcon={<TbPlus />}></Button>
-            <Button onClick={() => {
+            <ButtonCounter onClick={handleAdd} rightIcon={<TbPlus />}></ButtonCounter>
+            <ButtonCounter  onClick={() => {
                 if (contador) onAdd(contador)
-                }} disabled={!contador}> Agregar al carrito </Button>
+                }} disabled={!contador}> Agregar al carrito </ButtonCounter>
         </div>
     )
 }

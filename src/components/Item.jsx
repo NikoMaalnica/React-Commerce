@@ -1,10 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom"
-import { useCartContext } from "../context/cartContext";
 
 const Item = ({id, nombre, precio, imagen, descripcion, tag}) => {
     const navigate = useNavigate();
-    const cart = useCartContext();
 
     const [contextMenu, setContextMenu] = useState({
         top: 0,
@@ -13,7 +11,6 @@ const Item = ({id, nombre, precio, imagen, descripcion, tag}) => {
     });
     const handleContextMenu = (evt) => {
         evt.preventDefault()
-        console.log(evt)
         setContextMenu({
             top: evt.pageY,
             left: evt.pageX,

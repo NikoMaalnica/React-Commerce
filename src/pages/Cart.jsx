@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { addOrder } from "../api/orders";
 import { updateManyProducts } from "../api/products";
-import { useCartContext } from "../context/cartContext"
+import { useCartContext } from "../context/cartContext";
 
 export const Cart = () => {
     const navigate = useNavigate();
@@ -11,22 +11,25 @@ export const Cart = () => {
     const [name, setName] = useState("");
     const [phone, setPhone] = useState("");
     const [email, setEmail] = useState("");
+    const [isDisabled, setIsDisabled] = useState(true);
 
     const {getTotal, cart, emptyCart} = useCartContext();
 
     function isValidEmail(email) {
         return /\S+@\S+\.\S+/.test(email);
     }
+    function handleEmail({ target }) {
+        setEmail(target.value)
+    }
 
     useEffect(() => {
-        const valid = isValidEmail(email)
-        console.log(valid)
+        setIsDisabled(!isValidEmail(email))
     }, [email])
 
 
     const createOrder = async () => {
 
-        const items = cart.map(({id, nombre, qty, precio}) => ({
+        const items = cart.map(({id, nombre, qty, precio, imagen}) => ({
             id,
             title: nombre,
             qty,
@@ -39,11 +42,10 @@ export const Cart = () => {
             total: getTotal(),
         };
         const id = await addOrder(order);
-        console.log({id})
+        alert(`Muchas gracias por su compra. El numero de operacion es: ${id}`)
 
         await updateManyProducts(items);
 
-        //VACIAR CARRITO
         emptyCart();
 
         navigate("/")
@@ -54,6 +56,7 @@ export const Cart = () => {
         <div className="content">
         {cart.map(product => 
             <div 
+                className="cart__items"
                 key={product.id}
                 style={{
                     display: "flex",
@@ -62,35 +65,41 @@ export const Cart = () => {
                     alignItems: "center",
                     width: "100%",
                     justifyContent: "space-between",
+                    color: "whitesmoke"
                 }}>
-                <div style={{fontweight: 600}}>Nombre: {product.nombre}</div>
+                <img style={{height: "100%", position: "relative"}} src={product.imagen} alt="imagen item"/>
+                <div style={{fontweight: 600}}>{product.nombre}</div>
                 <div>Cantidad: {product.qty}</div>
-                <div>Categoria: {product.categoria}</div>
             </div>)}
             <span style={{
+                display: "flex",
+                justifyContent: "end",
                 marginBottom:50,
-                textAlign: "right",
                 width: "100%",
                 fontSize: 20,
-                fontWeight: 600,
+                fontWeight: 400,
+                color: "whitesmoke",
             }}>
-            ${getTotal()}
+            Precio Total: ${getTotal()}
             </span>
             <div style={{display: "grid", gap: 10}}>
-                <span>Nombre</span>
+                <span style={{color: "whitesmoke"}}>Nombre</span>
                 <input 
                 style={{border: "1px solid black", height: 40}}
                 onChange={(e) => setName(e.target.value)}/>
-                <span>Telefono</span>
+                <span style={{color: "whitesmoke"}}>Telefono</span>
                 <input 
                 style={{border: "1px solid black", height: 40}}
                 onChange={(e) => setPhone(e.target.value)}/>
-                <span>Email</span>
+                <span style={{color: "whitesmoke"}}>Email</span>
                 <input 
                 style={{border: "1px solid black", marginBottom: 15, height: 40}}
-                onChange={(e) => setEmail(e.target.value)}/>
+                onChange={handleEmail}/>
             </div>
-            <button disabled={!(name && phone && email)} onClick={createOrder}>Comprar</button>
+            <div className="cart__items__buttons">
+                <button className="cart__items__buttons__buy" disabled={isDisabled || !(name && phone)} onClick={createOrder}>COMPRAR</button>
+                <button className="cart__items__buttons__empty" onClick={emptyCart}>VACIAR CARRITO</button>
+            </div>
         </div>
     );
 };
